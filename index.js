@@ -1,7 +1,8 @@
+require("dotenv").config({ path: "./config.env" });
 const axios = require('axios');
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
 const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
 const stock = require('./scripts/stock');
 const profile = require('./scripts/profile');
 const trending = require('./scripts/trending');
@@ -17,11 +18,13 @@ const currencies = require('./scripts/currencies');
 const indCurrencies = require('./scripts/indCurrencies');
 const stats = require('./scripts/stat');
 const incomeStatement = require('./scripts/incomeStatement');
+const updateData = require('./scripts/updateDB');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 //GET home page
 app.get('/', (req, res) => {
@@ -33,10 +36,15 @@ app.get('/ticker/:ticker', async (req, res) => {
     const { ticker } = req.params;
     try {
         const data = await stock.fetchData(ticker);
-        res.json(data);
-
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -46,9 +54,15 @@ app.get('/ticker/:ticker/profile', async (req, res) => {
 
     try {
         const data = await profile.getData(ticker);
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -56,9 +70,15 @@ app.get('/ticker/:ticker/profile', async (req, res) => {
 app.get('/trending', async (req, res) => {
     try {
         const data = await trending.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -67,20 +87,31 @@ app.get('/trending', async (req, res) => {
 app.get('/most-active', async (req, res) => {
     try {
         const data = await mostActive.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
-} );
+});
 
-//GET top 250 gainers
 /* showing results for united states, mid/large/mega cap, vol greater than 15k, pctChange > 3*/
 app.get('/gainers', async (req, res) => {
     try {
         const data = await gainers.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -89,9 +120,15 @@ app.get('/gainers', async (req, res) => {
 app.get('/losers', async (req, res) => {
     try {
         const data = await losers.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -100,9 +137,15 @@ app.get('/losers', async (req, res) => {
 app.get('/etfs', async (req, res) => {
     try {
         const data = await etfs.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -110,9 +153,15 @@ app.get('/etfs', async (req, res) => {
 app.get('/futures', async (req, res) => {
     try {
         const data = await futures.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -122,9 +171,15 @@ app.get('/futures/:ticker', async (req, res) => {
 
     try {
         const data = await indFutures.getData(ticker);
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (err) {
-        res.json(err);
+        res.status(404).json({
+            error: true,
+            message: err.message
+        });
     }
 });
 
@@ -132,9 +187,15 @@ app.get('/futures/:ticker', async (req, res) => {
 app.get('/world-indices', async (req, res) => {
     try {
         const data = await worldIndices.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -144,9 +205,15 @@ app.get('/world-indices/:ticker', async (req, res) => {
 
     try {
         const data = await indWorldIndices.getData(ticker);
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (err) {
-        res.json(err);
+        res.status(404).json({
+            error: true,
+            message: err.message
+        });
     }
 });
 
@@ -154,9 +221,15 @@ app.get('/world-indices/:ticker', async (req, res) => {
 app.get('/currencies', async (req, res) => {
     try {
         const data = await currencies.getData();
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (error) {
-        res.json(error);
+        res.status(404).json({
+            error: true,
+            message: error.message
+        });
     }
 });
 
@@ -166,9 +239,15 @@ app.get('/currencies/:ticker', async (req, res) => {
 
     try {
         const data = await indCurrencies.getData(ticker);
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (err) {
-        res.json(err);
+        res.status(404).json({
+            error: true,
+            message: err.message
+        });
     }
 });
 
@@ -178,9 +257,15 @@ app.get('/ticker/:ticker/stats', async (req, res) => {
 
     try {
         const data = await stats.getData(ticker);
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (err) {
-        res.json(err);
+        res.status(404).json({
+            error: true,
+            message: err.message
+        });
     }
 });
 
@@ -190,15 +275,65 @@ app.get('/ticker/:ticker/income-statement', async (req, res) => {
 
     try {
         const data = await incomeStatement.getData(ticker);
-        res.json(data);
+        res.status(200).json({
+            error: false,
+            data
+        });
     } catch (err) {
-        res.json(err);
+        res.status(404).json({
+            error: true,
+            message: err.message
+        });
     }
 });
+
+//Update data into mongoDB
+app.get('/ticker/:ticker/update', async (req, res) => {
+    const { ticker } = req.params;
+    try {
+        const tickerData = await stock.fetchData(ticker);
+        const data = await updateData.setData(tickerData);
+        res.status(200).json({
+            error: false,
+            data
+        });
+    } catch (err) {
+        res.status(404).json({
+            error: true,
+            message: err.message
+        });
+    }
+});
+
+//GET data from database
+app.get('/ticker/getAll', async (req, res) => {
+    try {
+        const data = await getAll.getData();
+        res.status(200).json({
+            error: false,
+            data
+        });
+    } catch (err) {
+        res.status(404).json({
+            error: true,
+            message: err.message
+        });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
+
+// connect to db
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log('Connected to mongoDB')
+    })
+    .catch((error) => {
+        console.log(error)
+    });
 
 
 
