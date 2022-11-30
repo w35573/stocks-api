@@ -19,6 +19,7 @@ const indCurrencies = require('./scripts/indCurrencies');
 const stats = require('./scripts/stat');
 const incomeStatement = require('./scripts/incomeStatement');
 const updateData = require('./scripts/updateDB');
+const getAll = require('./scripts/getAll');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
 });
 
 //GET ticker details
-app.get('/ticker/:ticker', async (req, res) => {
+app.get('/api/ticker/:ticker', async (req, res) => {
     const { ticker } = req.params;
     try {
         const data = await stock.fetchData(ticker);
@@ -49,7 +50,7 @@ app.get('/ticker/:ticker', async (req, res) => {
 });
 
 //GET profile details
-app.get('/ticker/:ticker/profile', async (req, res) => {
+app.get('/api/ticker/:ticker/profile', async (req, res) => {
     const { ticker } = req.params;
 
     try {
@@ -67,7 +68,7 @@ app.get('/ticker/:ticker/profile', async (req, res) => {
 });
 
 //GET trending tickers 
-app.get('/trending', async (req, res) => {
+app.get('/api/trending', async (req, res) => {
     try {
         const data = await trending.getData();
         res.status(200).json({
@@ -84,7 +85,7 @@ app.get('/trending', async (req, res) => {
 
 //GET most active stocks
 /* showing results for united states, mid/large/mega cap, vol greater than 5 mil*/
-app.get('/most-active', async (req, res) => {
+app.get('/api/most-active', async (req, res) => {
     try {
         const data = await mostActive.getData();
         res.status(200).json({
@@ -100,7 +101,7 @@ app.get('/most-active', async (req, res) => {
 });
 
 /* showing results for united states, mid/large/mega cap, vol greater than 15k, pctChange > 3*/
-app.get('/gainers', async (req, res) => {
+app.get('/api/gainers', async (req, res) => {
     try {
         const data = await gainers.getData();
         res.status(200).json({
@@ -117,7 +118,7 @@ app.get('/gainers', async (req, res) => {
 
 //GET top losers
 /* showing results for united states, mid/large/mega cap, vol greater than 15k, pctChange > 3*/
-app.get('/losers', async (req, res) => {
+app.get('/api/losers', async (req, res) => {
     try {
         const data = await losers.getData();
         res.status(200).json({
@@ -134,7 +135,7 @@ app.get('/losers', async (req, res) => {
 
 //GET top 250 ETFs
 /* showing results for united states, price>10*/
-app.get('/etfs', async (req, res) => {
+app.get('/api/etfs', async (req, res) => {
     try {
         const data = await etfs.getData();
         res.status(200).json({
@@ -150,7 +151,7 @@ app.get('/etfs', async (req, res) => {
 });
 
 //GET futures
-app.get('/futures', async (req, res) => {
+app.get('/api/futures', async (req, res) => {
     try {
         const data = await futures.getData();
         res.status(200).json({
@@ -166,7 +167,7 @@ app.get('/futures', async (req, res) => {
 });
 
 //GET individual future details
-app.get('/futures/:ticker', async (req, res) => {
+app.get('/api/futures/:ticker', async (req, res) => {
     const { ticker } = req.params;
 
     try {
@@ -184,7 +185,7 @@ app.get('/futures/:ticker', async (req, res) => {
 });
 
 //GET world indices
-app.get('/world-indices', async (req, res) => {
+app.get('/api/world-indices', async (req, res) => {
     try {
         const data = await worldIndices.getData();
         res.status(200).json({
@@ -200,7 +201,7 @@ app.get('/world-indices', async (req, res) => {
 });
 
 //GET individual world index details
-app.get('/world-indices/:ticker', async (req, res) => {
+app.get('/api/world-indices/:ticker', async (req, res) => {
     const { ticker } = req.params;
 
     try {
@@ -218,7 +219,7 @@ app.get('/world-indices/:ticker', async (req, res) => {
 });
 
 //GET currencies
-app.get('/currencies', async (req, res) => {
+app.get('/api/currencies', async (req, res) => {
     try {
         const data = await currencies.getData();
         res.status(200).json({
@@ -234,7 +235,7 @@ app.get('/currencies', async (req, res) => {
 });
 
 //GET individual currency details
-app.get('/currencies/:ticker', async (req, res) => {
+app.get('/api/currencies/:ticker', async (req, res) => {
     const { ticker } = req.params;
 
     try {
@@ -252,7 +253,7 @@ app.get('/currencies/:ticker', async (req, res) => {
 });
 
 //GET statistical information for a ticker
-app.get('/ticker/:ticker/stats', async (req, res) => {
+app.get('/api/ticker/:ticker/stats', async (req, res) => {
     const { ticker } = req.params;
 
     try {
@@ -270,7 +271,7 @@ app.get('/ticker/:ticker/stats', async (req, res) => {
 });
 
 //GET income statement for a ticker
-app.get('/ticker/:ticker/income-statement', async (req, res) => {
+app.get('/api/ticker/:ticker/income-statement', async (req, res) => {
     const { ticker } = req.params;
 
     try {
@@ -288,7 +289,7 @@ app.get('/ticker/:ticker/income-statement', async (req, res) => {
 });
 
 //Update data into mongoDB
-app.get('/ticker/:ticker/update', async (req, res) => {
+app.get('/api/ticker/:ticker/update', async (req, res) => {
     const { ticker } = req.params;
     try {
         const tickerData = await stock.fetchData(ticker);
@@ -306,7 +307,7 @@ app.get('/ticker/:ticker/update', async (req, res) => {
 });
 
 //GET data from database
-app.get('/ticker/getAll', async (req, res) => {
+app.get('/api/getAll', async (req, res) => {
     try {
         const data = await getAll.getData();
         res.status(200).json({
