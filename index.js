@@ -22,7 +22,7 @@ const updateData = require('./scripts/updateDB');
 const getAll = require('./scripts/getAll');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 7000;
 
 app.use(express.json());
 app.use(cors());

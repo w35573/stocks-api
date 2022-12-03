@@ -5,7 +5,7 @@ async function setData() {
     try {
         for(let ticker of tickers) {
             try {
-                const response = await axios.get(`http://localhost:3000/ticker/${ticker}/update`);
+                const response = await axios.get(`http://localhost:3000/api/ticker/${ticker}/update`);
                 console.log(ticker);
             } catch (error) {
                 console.log(error.message);
