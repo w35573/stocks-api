@@ -2,7 +2,6 @@ require("dotenv").config({ path: "./config.env" });
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-// const profile = require('./scripts/profile');
 // const gainers = require('./scripts/gainers');
 // const losers = require('./scripts/losers');
 // const etfs = require('./scripts/etfs');
@@ -27,23 +26,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/stocks', require('./routes/stocks'));
 app.use('/api/v1/fundamentals', require('./routes/fundamentalData'));
-
-
-//GET profile details
-app.get('/api/ticker/:ticker/profile', async (req, res) => {
-    const { ticker } = req.params;
-    try {
-        const data = await profile.getData(ticker);
-        res.status(200).json({
-            message: 'success',
-            data
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: 'Internal Server Error'
-        });
-    }
-});
+app.use('/api/v1/options', require('./routes/options'));
 
 /* showing results for united states, mid/large/mega cap, vol greater than 15k, pctChange > 3*/
 app.get('/api/gainers', async (req, res) => {
