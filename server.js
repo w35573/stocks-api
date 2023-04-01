@@ -1,28 +1,22 @@
 require("dotenv").config({ path: "./config.env" });
-const axios = require('axios');
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const stock = require('./scripts/stock');
-const profile = require('./scripts/profile');
-const trending = require('./scripts/trending');
-const mostActive = require('./scripts/mostActive');
-const gainers = require('./scripts/gainers');
-const losers = require('./scripts/losers');
-const etfs = require('./scripts/etfs');
-const futures = require('./scripts/futures');
-const indFutures = require('./scripts/indFutures');
-const worldIndices = require('./scripts/worldIndices');
-const indWorldIndices = require('./scripts/indWorldIndices');
-const currencies = require('./scripts/currencies');
-const indCurrencies = require('./scripts/indCurrencies');
-const stats = require('./scripts/stat');
-const incomeStatement = require('./scripts/incomeStatement');
-const updateData = require('./scripts/updateDB');
-const getAll = require('./scripts/getAll');
+// const profile = require('./scripts/profile');
+// const gainers = require('./scripts/gainers');
+// const losers = require('./scripts/losers');
+// const etfs = require('./scripts/etfs');
+// const futures = require('./scripts/futures');
+// const indFutures = require('./scripts/indFutures');
+// const worldIndices = require('./scripts/worldIndices');
+// const indWorldIndices = require('./scripts/indWorldIndices');
+// const currencies = require('./scripts/currencies');
+// const indCurrencies = require('./scripts/indCurrencies');
+// const stats = require('./scripts/stat');
+// const incomeStatement = require('./scripts/incomeStatement');
 
 const app = express();
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cors());
@@ -32,70 +26,22 @@ app.get('/', (req, res) => {
     res.send('Welcome to Stockers API');
 });
 
-//GET ticker details
-app.get('/api/ticker/:ticker', async (req, res) => {
-    const { ticker } = req.params;
-    try {
-        const data = await stock.fetchData(ticker);
-        res.status(200).json({
-            error: false,
-            data
-        });
-    } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
-        });
-    }
-});
+app.use('/api/v1/stocks', require('./routes/stocks'));
+
+
 
 //GET profile details
 app.get('/api/ticker/:ticker/profile', async (req, res) => {
     const { ticker } = req.params;
-
     try {
         const data = await profile.getData(ticker);
         res.status(200).json({
-            error: false,
+            message: 'success',
             data
         });
     } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
-        });
-    }
-});
-
-//GET trending tickers 
-app.get('/api/trending', async (req, res) => {
-    try {
-        const data = await trending.getData();
-        res.status(200).json({
-            error: false,
-            data
-        });
-    } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
-        });
-    }
-});
-
-//GET most active stocks
-/* showing results for united states, mid/large/mega cap, vol greater than 5 mil*/
-app.get('/api/most-active', async (req, res) => {
-    try {
-        const data = await mostActive.getData();
-        res.status(200).json({
-            error: false,
-            data
-        });
-    } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
+        res.status(500).json({
+            message: 'Internal Server Error'
         });
     }
 });
@@ -105,13 +51,12 @@ app.get('/api/gainers', async (req, res) => {
     try {
         const data = await gainers.getData();
         res.status(200).json({
-            error: false,
+            message: 'success',
             data
         });
     } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
+        res.status(500).json({
+            message: 'Internal Server Error'
         });
     }
 });
@@ -122,13 +67,12 @@ app.get('/api/losers', async (req, res) => {
     try {
         const data = await losers.getData();
         res.status(200).json({
-            error: false,
+            message: 'success',
             data
         });
     } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
+        res.status(500).json({
+            message: 'Internal Server Error'
         });
     }
 });
@@ -139,13 +83,12 @@ app.get('/api/etfs', async (req, res) => {
     try {
         const data = await etfs.getData();
         res.status(200).json({
-            error: false,
+            message: 'success',
             data
         });
     } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
+        res.status(500).json({
+            message: 'Internal Server Error'
         });
     }
 });
@@ -155,13 +98,12 @@ app.get('/api/futures', async (req, res) => {
     try {
         const data = await futures.getData();
         res.status(200).json({
-            error: false,
+            message: 'success',
             data
         });
     } catch (error) {
-        res.status(404).json({
-            error: true,
-            message: error.message
+        res.status(500).json({
+            message: 'Internal Server Error'
         });
     }
 });
@@ -173,13 +115,12 @@ app.get('/api/futures/:ticker', async (req, res) => {
     try {
         const data = await indFutures.getData(ticker);
         res.status(200).json({
-            error: false,
+            message: 'success',
             data
         });
     } catch (err) {
-        res.status(404).json({
-            error: true,
-            message: err.message
+        res.status(500).json({
+            message: 'Internal Server Error'
         });
     }
 });
@@ -287,41 +228,6 @@ app.get('/api/ticker/:ticker/income-statement', async (req, res) => {
         });
     }
 });
-
-//Update data into mongoDB
-app.get('/api/ticker/:ticker/update', async (req, res) => {
-    const { ticker } = req.params;
-    try {
-        const tickerData = await stock.fetchData(ticker);
-        const data = await updateData.setData(tickerData);
-        res.status(200).json({
-            error: false,
-            data
-        });
-    } catch (err) {
-        res.status(404).json({
-            error: true,
-            message: err.message
-        });
-    }
-});
-
-//GET data from database
-app.get('/api/getAll', async (req, res) => {
-    try {
-        const data = await getAll.getData();
-        res.status(200).json({
-            error: false,
-            data
-        });
-    } catch (err) {
-        res.status(404).json({
-            error: true,
-            message: err.message
-        });
-    }
-});
-
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);

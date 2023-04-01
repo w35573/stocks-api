@@ -1,20 +1,22 @@
-const tickers = require('./tickers.json');
+//code to query /api/ticker/:ticker this endpoint at 2 second interval
+
 const axios = require('axios');
+const { setInterval } = require('timers');
 
-async function setData() {
-    try {
-        for(let ticker of tickers) {
-            try {
-                const response = await axios.get(`http://localhost:3000/api/ticker/${ticker}/update`);
-                console.log(ticker);
-            } catch (error) {
-                console.log(error.message);
-                continue;
-            }
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
+const ticker = 'AAPL';
 
-setData();
+const interval = setInterval(() => {
+    axios.get(`http://localhost:3000/api/v1/stocks/realtime/${ticker}`)
+        .then(res => {
+            console.log(
+                res.data.data.name,
+                res.data.data.price,
+                res.data.data.change,
+                res.data.data.pctChange
+            );
+        })
+        .catch(err => {
+            console.log(err);
+        });
+}, 1000);
+

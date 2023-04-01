@@ -1,0 +1,32 @@
+Redefining Stocks API:
+
+1) Base URL: https://query1.finance.yahoo.com/v10/finance/quoteSummary/AAPL?modules=assetProfile%2CearningsHistory%2CbalanceSheetHistory
+
+modules include:
+
+['assetProfile',
+ 'incomeStatementHistory',
+ 'incomeStatementHistoryQuarterly',
+ 'balanceSheetHistory',
+ 'balanceSheetHistoryQuarterly',
+ 'cashflowStatementHistory',
+ 'cashflowStatementHistoryQuarterly',
+ 'defaultKeyStatistics',
+ 'financialData',
+ 'calendarEvents',
+ 'secFilings',
+ 'recommendationTrend',
+ 'upgradeDowngradeHistory',
+ 'institutionOwnership',
+ 'fundOwnership',
+ 'majorDirectHolders',
+ 'majorHoldersBreakdown',
+ 'insiderTransactions',
+ 'insiderHolders',
+ 'netSharePurchaseActivity',
+ 'earnings',
+ 'earningsHistory',
+ 'earningsTrend',
+ 'industryTrend',
+ 'indexTrend',
+ 'sectorTrend']
