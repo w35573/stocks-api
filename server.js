@@ -12,8 +12,7 @@ const mongoose = require('mongoose');
 // const indWorldIndices = require('./scripts/indWorldIndices');
 // const currencies = require('./scripts/currencies');
 // const indCurrencies = require('./scripts/indCurrencies');
-// const stats = require('./scripts/stat');
-// const incomeStatement = require('./scripts/incomeStatement');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,7 +26,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/v1/stocks', require('./routes/stocks'));
-
+app.use('/api/v1/fundamentals', require('./routes/fundamentalData'));
 
 
 //GET profile details
@@ -181,42 +180,6 @@ app.get('/api/currencies/:ticker', async (req, res) => {
 
     try {
         const data = await indCurrencies.getData(ticker);
-        res.status(200).json({
-            error: false,
-            data
-        });
-    } catch (err) {
-        res.status(404).json({
-            error: true,
-            message: err.message
-        });
-    }
-});
-
-//GET statistical information for a ticker
-app.get('/api/ticker/:ticker/stats', async (req, res) => {
-    const { ticker } = req.params;
-
-    try {
-        const data = await stats.getData(ticker);
-        res.status(200).json({
-            error: false,
-            data
-        });
-    } catch (err) {
-        res.status(404).json({
-            error: true,
-            message: err.message
-        });
-    }
-});
-
-//GET income statement for a ticker
-app.get('/api/ticker/:ticker/income-statement', async (req, res) => {
-    const { ticker } = req.params;
-
-    try {
-        const data = await incomeStatement.getData(ticker);
         res.status(200).json({
             error: false,
             data

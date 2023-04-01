@@ -10,12 +10,12 @@ router.get('/realtime/:ticker', async (req, res) => {
     const { ticker } = req.params;
     try {
         const data = await realtime.fetchData(ticker);
-        res.status(200).json({
+        return res.status(200).json({
             message: 'success',
             data
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Internal Server Error'
         });
     }
@@ -26,12 +26,12 @@ router.get('/realtime/:ticker', async (req, res) => {
 router.get('/trending', async (req, res) => {
     try {
         const data = await trending.getData();
-        res.status(200).json({
+        return res.status(200).json({
             message: 'success',
             data
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Internal Server Error'
         });
     }
@@ -41,12 +41,12 @@ router.get('/trending', async (req, res) => {
 router.get('/most-active', async (req, res) => {
     try {
         const data = await mostActive.getData();
-        res.status(200).json({
+        return res.status(200).json({
             message: 'success',
             data
         });
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: 'Internal Server Error'
         });
     }
