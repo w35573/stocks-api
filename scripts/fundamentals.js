@@ -1,5 +1,5 @@
 const axios = require('axios');
-const baseURL = 'https://query1.finance.yahoo.com/v10/finance/quoteSummary'
+const baseURL = 'https://query2.finance.yahoo.com/v10/finance/quoteSummary'
 
 const getData = async (ticker, options) => {
     try {
